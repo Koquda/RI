@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+
+    <mapped-superclass class="uo.ri.cws.domain.base.BaseEntity">
+        <attributes>
+            <id name="id"/>
+            <version name="version"/>
+        </attributes>
+    </mapped-superclass>
+
+    <embeddable class="uo.ri.cws.domain.Address">
+        <attributes>
+            <basic name="street" optional="false"/>
+            <basic name="city" optional="false"/>
+            <basic name="zipCode" optional="false"/>
+        </attributes>
+    </embeddable>
+
+    <entity class="uo.ri.cws.domain.Cash">
+        <table name="TCashes"></table>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Charge">
+        <table name="TCharges">
+            <unique-constraint>
+                <column-name>PAYMENTMEAN_ID</column-name>
+                <column-name>INVOICE_ID</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <many-to-one name="invoice"/>
+            <many-to-one name="paymentMean"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Client">
+        <table name="TClients">
+        </table>
+        <attributes>
+            <basic name="dni">
+                <column unique="true"/>
+            </basic>
+            <basic name="name" optional="false"/>
+            <basic name="surname" optional="false"/>
+            <one-to-many name="vehicles" mapped-by="client"></one-to-many>
+            <one-to-many name="paymentMeans" mapped-by="client"></one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Contract">
+        <table name="TContracts">
+            <unique-constraint>
+                <column-name>STARTDATE</column-name>
+                <column-name>MECHANIC_ID</column-name>
+                <column-name>FIREDMECHANIC_ID</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <basic name="annualBaseWage">
+                <column name="ANNUALBASEWAGE"/>
+            </basic>
+            <basic name="state">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <many-to-one name="firedMechanic" optional="false"/>
+            <many-to-one name="contractType" optional="false"/>
+            <many-to-one name="professionalGroup" optional="false"/>
+            <one-to-many name="payrolls" mapped-by="contract"/>
+            <one-to-one name="mechanic" optional="false"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.ContractType">
+        <table name="TContractTypes"/>
+        <attributes>
+            <basic name="name">
+                <column unique="true"/>
+            </basic>
+            <one-to-many name="contracts" mapped-by="contractType"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.CreditCard">
+        <table name="TCreditCards">
+        </table>
+        <attributes>
+            <basic name="number">
+                <column unique="true"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Intervention">
+        <table name="TINTERVENTIONS">
+            <unique-constraint>
+                <column-name>WORKORDER_ID</column-name>
+                <column-name>MECHANIC_ID</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <many-to-one name="mechanic" optional="false"/>
+            <many-to-one name="workOrder" optional="false"/>
+            <one-to-many name="substitutions" mapped-by="intervention"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Invoice">
+        <table name="TINVOICES">
+        </table>
+        <attributes>
+            <basic name="number">
+                <column unique="true"/>
+            </basic>
+            <basic name="status">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <one-to-many name="workOrders" mapped-by="invoice"/>
+            <one-to-many name="charges" mapped-by="invoice"/>
+
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Mechanic">
+        <table name="TMechanics">
+        </table>
+        <attributes>
+            <basic name="dni">
+                <column unique="true"/>
+            </basic>
+            <basic name="surname" optional="false"/>
+            <one-to-many name="assigned" mapped-by="mechanic"/>
+            <one-to-many name="interventions" mapped-by="mechanic"/>
+            <one-to-many name="terminatedContracts" mapped-by="firedMechanic"/>
+            <one-to-one name="contractInForce" mapped-by="mechanic"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.PaymentMean">
+        <table name="TPaymentMeans">
+        </table>
+        <inheritance strategy="JOINED"/>
+        <attributes>
+            <many-to-one name="client" optional="false"/>
+            <one-to-many name="charges" mapped-by="paymentMean"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Payroll">
+        <table name="TPayrolls">
+            <unique-constraint>
+                <column-name>CONTRACT_ID</column-name>
+                <column-name>DATE</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <many-to-one name="contract" optional="false"/>
+            <transient name="netWage"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.ProfessionalGroup">
+        <table name="TPROFESSIONALGROUPS">
+        </table>
+        <attributes>
+            <basic name="name">
+                <column unique="true"/>
+            </basic>
+            <basic name="trienniumSalary">
+                <column name="TRIENNIUMPAYMENT"/>
+            </basic>
+            <basic name="productivityRate">
+                <column name="PRODUCTIVITYBONUSPERCENTAGE"/>
+            </basic>
+            <one-to-many name="contracts" mapped-by="professionalGroup"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.SparePart">
+        <table name="TSPAREPARTS"/>
+        <attributes>
+            <basic name="code">
+                <column unique="true"/>
+            </basic>
+            <one-to-many name="substitutions" mapped-by="sparePart"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Substitution">
+        <table name="TSUBSTITUTIONS">
+            <unique-constraint>
+                <column-name>INTERVENTION_ID</column-name>
+                <column-name>SPAREPART_ID</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <many-to-one name="sparePart" optional="false"/>
+            <many-to-one name="intervention" optional="false"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Vehicle">
+        <table name="TVEHICLES"/>
+        <attributes>
+            <basic name="plateNumber">
+                <column unique="true"/>
+            </basic>
+            <basic name="make" optional="false">
+                <column name="BRAND"/>
+            </basic>
+            <many-to-one name="vehicleType" optional="false"/>
+            <many-to-one name="client" optional="false"/>
+            <one-to-many name="workOrders" mapped-by="vehicle"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.VehicleType">
+        <table name="TVEHICLETYPES"/>
+        <attributes>
+            <basic name="name">
+                <column unique="true"/>
+            </basic>
+            <one-to-many name="vehicles" mapped-by="vehicleType"/>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.Voucher">
+        <table name="TVOUCHERS">
+        </table>
+        <attributes>
+            <basic name="code">
+                <column unique="true"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="uo.ri.cws.domain.WorkOrder">
+        <table name="TWORKORDERS">
+            <unique-constraint>
+                <column-name>VEHICLE_ID</column-name>
+                <column-name>DATE</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <basic name="status">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <many-to-one name="vehicle" optional="false"/>
+            <many-to-one name="mechanic" optional="false"/>
+            <many-to-one name="invoice" optional="false"/>
+            <one-to-many name="interventions" mapped-by="workOrder"/>
+        </attributes>
+    </entity>
+
+</entity-mappings>

@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CWS0.iml" filepath="$PROJECT_DIR$/CWS0.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Util/Util.iml" filepath="$PROJECT_DIR$/../Util/Util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cws_client_cashier/cws_client_cashier.iml" filepath="$PROJECT_DIR$/cws_client_cashier/cws_client_cashier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cws_client_foreman/cws_client_foreman.iml" filepath="$PROJECT_DIR$/cws_client_foreman/cws_client_foreman.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cws_client_manager/cws_client_manager.iml" filepath="$PROJECT_DIR$/cws_client_manager/cws_client_manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cws_client_mechanic/cws_client_mechanic.iml" filepath="$PROJECT_DIR$/cws_client_mechanic/cws_client_mechanic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cws_services_p8_skeleton/cws_services.iml" filepath="$PROJECT_DIR$/cws_services_p8_skeleton/cws_services.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/util.iml" filepath="$PROJECT_DIR$/util/util.iml" />
     </modules>
   </component>
 </project>
